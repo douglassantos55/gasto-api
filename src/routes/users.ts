@@ -1,18 +1,16 @@
-import bcrypt from "bcrypt"
-import { randomUUID } from "crypto"
 import { Request, Response, Router } from "express"
-import User from "../models/user"
-import { UserData } from "../types"
+import { UserCreationData } from "../types"
 import createValidator from "../validator"
+import repository from "../repositories/users"
 
 const router = Router()
 
-router.get("/", (_req: Request, res: Response) => {
-    res.end("users endpoint")
+router.get("/", async (_req: Request, res: Response) => {
+    res.json(await repository.all())
 })
 
 router.post("/", async (req: Request, res: Response) => {
-    const data = req.body as UserData
+    const data = req.body as UserCreationData
     const validator = createValidator()
 
     const rules = {
@@ -22,17 +20,13 @@ router.post("/", async (req: Request, res: Response) => {
         confirmPassword: validator.rules().required().matches("password"),
     }
 
-    const errors = validator.validate<UserData>(data, rules)
+    const errors = validator.validate<UserCreationData>(data, rules)
 
     if (errors !== undefined) {
         return res.status(400).json(errors)
     }
 
-    const user = await User.create({
-        ...data,
-        id: randomUUID(),
-        password: await bcrypt.hash(data.password, 10),
-    })
+    const user = await repository.create(data)
     return res.status(201).json(user)
 })
 
