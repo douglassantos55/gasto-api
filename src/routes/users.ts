@@ -23,6 +23,14 @@ router.post("/", async (req: Request, res: Response) => {
 
     const errors = validator.validate<UserCreationData>(data, rules)
 
+    if (await repository.findByEmail(data.email)) {
+        if (!errors.email) {
+            errors.email = []
+        }
+
+        errors.email.push("this email is already being used")
+    }
+
     if (errors !== undefined) {
         return res.status(400).json(errors)
     }

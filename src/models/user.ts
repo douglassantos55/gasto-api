@@ -2,7 +2,7 @@ import { DataTypes, Model } from "sequelize"
 import sequelize from "./connection"
 import { User as UserInterface } from "../types"
 
-class User extends Model<UserInterface> implements UserInterface {
+class User extends Model implements UserInterface {
     id: string
     name: string
     email: string
@@ -16,7 +16,10 @@ User.init({
         primaryKey: true,
     },
     name: DataTypes.STRING,
-    email: DataTypes.STRING,
+    email: {
+        type: DataTypes.STRING,
+        unique: true,
+    },
     password: DataTypes.STRING,
     picture: DataTypes.STRING,
 }, {
