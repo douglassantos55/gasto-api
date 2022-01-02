@@ -2,14 +2,12 @@ import { DataTypes, Model } from "sequelize"
 import sequelize from "./connection"
 import { User as UserInterface } from "../types"
 
-class User extends Model implements UserInterface {
+class User extends Model<UserInterface> implements UserInterface {
     id: string
     name: string
     email: string
     password: string
     picture: string
-
-    static PASSWORD_SALT = 10
 }
 
 User.init({

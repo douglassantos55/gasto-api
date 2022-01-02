@@ -1,19 +1,23 @@
 import bcrypt from "bcrypt"
 import { randomUUID } from "crypto"
 import { Repository } from "../types"
-import User from "../../models/user"
-import { UserCreationData } from "../../types"
+import UserModel from "../../models/user"
+import { User, UserCreationData } from "../../types"
 
 export default class implements Repository<User> {
     all(): Promise<User[]> {
-        return User.findAll()
+        return UserModel.findAll()
+    }
+
+    findByEmail(email: string): Promise<User> {
+        return UserModel.findOne({ where: { email } })
     }
 
     async create(data: UserCreationData): Promise<User> {
-        return User.create({
+        return UserModel.create({
             ...data,
             id: randomUUID(),
-            password: await bcrypt.hash(data.password, User.PASSWORD_SALT)
+            password: await bcrypt.hash(data.password, 10)
         })
     }
 }
