@@ -1,3 +1,6 @@
-export interface Validator {
-    email(email: string): boolean
+export type UserData = {
+    name: string
+    email: string
+    password: string
+    confirmPassword: string
 }

@@ -39,7 +39,7 @@ export default class implements Validator {
         return new ValidateJsRule()
     }
 
-    validate<T>(data: T, rules: Rules<T>): Errors<T> {
+    validate<T>(data: T, rules: Rules<T>): Errors<T> | undefined {
         const constraints = {}
 
         Object.keys(rules).forEach((field: string) => {

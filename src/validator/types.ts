@@ -8,7 +8,7 @@ export type Rules<T> = {
 
 export interface Validator {
     rules(): Rule
-    validate<T>(data: T, rules: Rules<T>): Errors<T>
+    validate<T>(data: T, rules: Rules<T>): Errors<T> | undefined
 }
 
 export interface Rule {
