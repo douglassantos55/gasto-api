@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import { Request, Response, Router } from "express"
 import repository from "../repositories/users"
-import { generateJWT } from "../auth"
+import { generateJWT } from "../auth/token"
 
 const router = Router()
 

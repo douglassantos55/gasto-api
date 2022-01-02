@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express"
 import { UserCreationData } from "../types"
 import createValidator from "../validator"
 import repository from "../repositories/users"
-import { authMiddleware } from "../auth"
+import authMiddleware from "../auth/middleware"
 
 const router = Router()
 
