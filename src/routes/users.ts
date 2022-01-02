@@ -2,10 +2,11 @@ import { Request, Response, Router } from "express"
 import { UserCreationData } from "../types"
 import createValidator from "../validator"
 import repository from "../repositories/users"
+import { authMiddleware } from "../auth"
 
 const router = Router()
 
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     res.json(await repository.all())
 })
 

@@ -1,5 +1,9 @@
+import dotenv from "dotenv"
 import express, { NextFunction, Request, Response } from "express"
 import users from "./routes/users"
+import auth from "./routes/auth"
+
+dotenv.config()
 
 const port = 3000
 const app = express()
@@ -15,5 +19,6 @@ app.use(function (_req: Request, res: Response, next: NextFunction) {
 })
 
 app.use("/users", users)
+app.use("/auth", auth)
 
 app.listen(port, () => console.log(`Listening at http://localhost:${port}`))

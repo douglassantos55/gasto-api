@@ -10,7 +10,7 @@ export default class implements Repository<User> {
     }
 
     findByEmail(email: string): Promise<User> {
-        return UserModel.findOne({ where: { email } })
+        return UserModel.findOne({ where: { email }, raw: true })
     }
 
     async create(data: UserCreationData): Promise<User> {
