@@ -23,7 +23,7 @@ router.post("/", async (req: Request, res: Response) => {
 
     const errors = validator.validate<UserCreationData>(data, rules)
 
-    if (await repository.findByEmail(data.email)) {
+    if (await repository.findOneBy({ email: data.email })) {
         if (!errors.email) {
             errors.email = []
         }

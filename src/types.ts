@@ -4,9 +4,13 @@ export interface User {
     email: string
     password: string
     picture: string
-    toJSON(): string
 }
 
 export type UserCreationData = User & {
     confirmPassword: string
+}
+
+export type Token = {
+    user_id: string
+    token: string
 }

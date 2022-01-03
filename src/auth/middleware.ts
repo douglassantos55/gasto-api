@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express"
-import { decodeJWT } from "./token"
+import { decodeAccessToken } from "./token"
 
 export default function (req: Request, res: Response, next: NextFunction) {
     try {
         const token = req.headers.authorization.replace("Bearer", "").trim()
-        const decoded = decodeJWT(token)
+        const decoded = decodeAccessToken(token)
 
         // @ts-ignore
         req.user = decoded

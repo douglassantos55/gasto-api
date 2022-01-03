@@ -6,6 +6,6 @@ const conn = new Sequelize({
     logging: false,
 })
 
-conn.sync({ alter: true })
+conn.sync()
 
 export default conn
