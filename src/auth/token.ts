@@ -18,7 +18,7 @@ export function generateRefreshToken(user: User): string {
 }
 
 export function generateAccessToken(user: User): string {
-    return generateJWT(user, "1m", process.env.ACCESS_TOKEN_SECRET)
+    return generateJWT(user, "1h", process.env.ACCESS_TOKEN_SECRET)
 }
 
 function generateJWT(user: User, duration: string, secret: string): string {
