@@ -1,3 +1,3 @@
 import Repository from "./sequelize/tokens"
 
-export default new Repository()
+export default Repository

@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express"
 import { UserCreationData } from "../types"
-import createValidator from "../validator"
+import validator from "../validator"
 import repository from "../repositories/users"
 import authMiddleware from "../auth/middleware"
 
@@ -12,7 +12,6 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
     const data = req.body as UserCreationData
-    const validator = createValidator()
 
     const rules = {
         name: validator.rules().required(),

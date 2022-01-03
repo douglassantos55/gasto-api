@@ -1,3 +1,3 @@
-import Repository from "./sequelize/users"
+import repository from "./sequelize/users"
 
-export default new Repository()
+export default repository
