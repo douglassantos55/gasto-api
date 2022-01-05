@@ -5,19 +5,30 @@ type Constraints = {
     [key: string]: any
 }
 
-validate.validators.requiredIfPresent = function(value: string, _options: object, key: string, data: object) {
+validate.validators.requiredIfPresent = function(
+    value: string,
+    options: { field: string },
+    key: string,
+    data: object
+) {
+    if (options.field != undefined) {
+        key = options.field
+    }
+
     if (data[key] !== undefined) {
         return validate.single(value, { presence: { allowEmpty: false } })
     }
 
-    return null
+    return undefined
 }
 
 class ValidateJsRule implements Rule {
     public constraints: Constraints = {}
 
-    requiredIfPresent(): Rule {
-        this.constraints.requiredIfPresent = true
+    requiredIfPresent(field?: string): Rule {
+        this.constraints.requiredIfPresent = {
+            field
+        }
         return this
     }
 

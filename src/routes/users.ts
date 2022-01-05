@@ -18,6 +18,8 @@ router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: R
     const rules = {
         name: validator.rules().requiredIfPresent(),
         email: validator.rules().requiredIfPresent().email(),
+        password: validator.rules().requiredIfPresent().min(6),
+        confirmPassword: validator.rules().requiredIfPresent("password").matches("password"),
     }
 
     const errors = validator.validate<User>(data, rules)
