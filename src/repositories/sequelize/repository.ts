@@ -29,9 +29,16 @@ export default class <T> implements Repository<T> {
         return !!count
     }
 
-    async create(data: any): Promise<T> {
+    create(data: any): Promise<T> {
         // @ts-ignore
         return this.model.create(data)
+    }
+
+    async update(data: any, condition: Condition<T>): Promise<T> {
+        // @ts-ignore
+        await this.model.update(data, { where: condition, raw: true })
+
+        return this.findOneBy(condition)
     }
 }
 

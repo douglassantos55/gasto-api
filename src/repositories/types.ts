@@ -8,5 +8,6 @@ export interface Repository<T> {
     findById(id: string): Promise<T>
     findOneBy(condition: Condition<T>): Promise<T>
     destroy(condition: Condition<T>): Promise<boolean>
+    update(data: any, condition: Condition<T>): Promise<T>
 }
 

@@ -6,7 +6,6 @@ export default function (req: Request, res: Response, next: NextFunction) {
         const token = req.headers.authorization.replace("Bearer", "").trim()
         const decoded = decodeAccessToken(token)
 
-        // @ts-ignore
         req.user = decoded
 
         next()
