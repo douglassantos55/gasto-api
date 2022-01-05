@@ -15,5 +15,6 @@ export interface Rule {
     email(): Rule
     required(): Rule
     min(size: number): Rule
+    requiredIfPresent(): Rule
     matches(field: string): Rule
 }

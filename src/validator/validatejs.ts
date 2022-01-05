@@ -5,8 +5,21 @@ type Constraints = {
     [key: string]: any
 }
 
+validate.validators.requiredIfPresent = function(value: string, _options: object, key: string, data: object) {
+    if (data[key] !== undefined) {
+        return validate.single(value, { presence: { allowEmpty: false } })
+    }
+
+    return null
+}
+
 class ValidateJsRule implements Rule {
     public constraints: Constraints = {}
+
+    requiredIfPresent(): Rule {
+        this.constraints.requiredIfPresent = true
+        return this
+    }
 
     email(): Rule {
         this.constraints.email = true

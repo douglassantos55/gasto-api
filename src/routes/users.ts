@@ -16,22 +16,24 @@ router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: R
     const data = req.body
 
     const rules = {
-        name: validator.rules().required(),
+        name: validator.rules().requiredIfPresent(),
+        email: validator.rules().requiredIfPresent().email(),
     }
 
     const errors = validator.validate<User>(data, rules)
 
-    const uploader = new Uploader()
-    const filesUploaded = await uploader.upload(req.files)
+    if (Object.keys(req.files).length !== 0) {
+        const uploader = new Uploader()
+        const filesUploaded = await uploader.upload(req.files)
 
-    if (errors || !filesUploaded.image) {
+        data.picture = filesUploaded.image
+    }
+
+    if (errors) {
         return res.status(400).json(errors)
     }
 
-    return res.json(await repository.update({
-        ...data,
-        picture: filesUploaded.image,
-    }, { id: req.user.id }))
+    return res.json(await repository.update(data, { id: req.user.id }))
 })
 
 router.post("/", async (req: Request, res: Response) => {
