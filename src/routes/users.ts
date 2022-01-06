@@ -12,6 +12,35 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     res.json(await repository.all())
 })
 
+router.post("/friends", authMiddleware, async (req: Request, res: Response) => {
+    const data = req.body
+
+    const errors = validator.validate(data, {
+        email: validator.rules().required().email(),
+    })
+
+    if (errors) {
+        return res.status(400).json(errors)
+    }
+
+    const friend = await repository.findOneBy({ email: data.email })
+
+    if (!friend) {
+        return res.status(400).json({ email: "no user found for this email" })
+    }
+
+    if (friend.id === req.user.id) {
+        return res.status(400).json({ email: "you cannot add yourself as a friend" })
+    }
+
+    if (await repository.hasFriend(req.user, friend)) {
+        return res.status(400).json({ email: "this user is already your friend" })
+    }
+
+    await repository.addFriend(req.user, friend)
+    res.status(201).json(friend)
+})
+
 router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: Response) => {
     const data = req.body
 

@@ -4,8 +4,8 @@ import connection from "./connection"
 import { Token as TokenInterface } from "../types"
 
 class Token extends Model implements TokenInterface {
-    user_id: string
-    token: string
+    declare user_id: string
+    declare token: string
 }
 
 Token.init({
