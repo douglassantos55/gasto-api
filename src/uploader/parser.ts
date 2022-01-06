@@ -28,7 +28,12 @@ export default class implements Parser {
             }
 
             files.forEach((file: File) => {
-                convertedFiles[key] = { name: file.newFilename, path: file.filepath }
+                convertedFiles[key] = {
+                    name: file.newFilename,
+                    path: file.filepath,
+                    size: file.size,
+                    mimeType: file.mimetype,
+                }
             })
         })
 

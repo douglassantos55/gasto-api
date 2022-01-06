@@ -22,17 +22,32 @@ router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: R
         confirmPassword: validator.rules().requiredIfPresent("password").matches("password"),
     }
 
-    const errors = validator.validate<User>(data, rules)
-
-    if (Object.keys(req.files).length !== 0) {
-        const uploader = new Uploader()
-        const filesUploaded = await uploader.upload(req.files)
-
-        data.picture = filesUploaded.image
-    }
+    let errors = validator.validate<User>(data, rules)
 
     if (errors) {
         return res.status(400).json(errors)
+    }
+
+    if (Object.keys(req.files).length !== 0) {
+        try {
+            const uploader = new Uploader()
+
+            const filesUploaded = await uploader.upload(req.files, {
+                image: {
+                    size: (1024 * 1024), // 1MB,
+                    uploadDir: process.env.UPLOAD_DIR + 'pictures/',
+                    mimeType: ["image/jpeg", "image/png"],
+                }
+            })
+
+            if (filesUploaded.image) {
+                uploader.unlink(req.user.picture)
+            }
+
+            data.picture = filesUploaded.image
+        } catch (err) {
+            return res.status(400).json({ picture: err })
+        }
     }
 
     return res.json(await repository.update(data, { id: req.user.id }))
