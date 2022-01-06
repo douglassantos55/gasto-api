@@ -12,9 +12,12 @@ export interface Validator {
 }
 
 export interface Rule {
+    date(): Rule
     email(): Rule
+    numeric(): Rule
     required(): Rule
     min(size: number): Rule
+    in<T>(options: T[]): Rule
     matches(field: string): Rule
     requiredIfPresent(field?: string): Rule
 }

@@ -10,7 +10,23 @@ export type UserCreationData = User & {
     confirmPassword: string
 }
 
-export type Token = {
+export interface Token {
     user_id: string
     token: string
+}
+
+export enum ExpenseType {
+    NORMAL = "normal",
+    LOAN = "emprestimo",
+    PAYMENT = "pagamento",
+}
+
+export interface Expense {
+    id: string
+    date: Date
+    description: string
+    total: number
+    type: ExpenseType
+    friend?: User
+    payment?: Expense
 }

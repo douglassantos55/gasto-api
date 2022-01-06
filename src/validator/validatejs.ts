@@ -5,6 +5,22 @@ type Constraints = {
     [key: string]: any
 }
 
+type DateOptions = {
+    earliest: unknown
+    latest: unknown
+    dateOnly: boolean
+}
+
+// https://validatejs.org/#validators-date
+validate.extend(validate.validators.datetime, {
+    parse: function(value: unknown, _options: DateOptions) {
+        return new Date(value as number);
+    },
+    format: function(value: number, _options: DateOptions) {
+        return new Date(value).toLocaleDateString()
+    }
+});
+
 validate.validators.requiredIfPresent = function(
     value: string,
     options: { field: string },
@@ -24,6 +40,21 @@ validate.validators.requiredIfPresent = function(
 
 class ValidateJsRule implements Rule {
     public constraints: Constraints = {}
+
+    numeric(): Rule {
+        this.constraints.numericality = { strict: true }
+        return this
+    }
+
+    date(): Rule {
+        this.constraints.date = true
+        return this
+    }
+
+    in<T>(options: T[]): Rule {
+        this.constraints.inclusion = options
+        return this
+    }
 
     requiredIfPresent(field?: string): Rule {
         this.constraints.requiredIfPresent = {
