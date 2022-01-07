@@ -1,12 +1,13 @@
 import bcrypt from "bcrypt"
-import { Request, Response, Router } from "express"
+import { NextFunction, Request, Response, Router } from "express"
 import userRepository from "../repositories/users"
 import tokenRepository from "../repositories/tokens"
 import { decodeRefreshToken, generateAccessToken, generateRefreshToken } from "../auth/token"
+import { AuthenticationError } from "../errors"
 
 const router = Router()
 
-router.post("/refresh", async (req: Request, res: Response) => {
+router.post("/refresh", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const decoded = decodeRefreshToken(req.body.refreshToken)
 
@@ -14,7 +15,7 @@ router.post("/refresh", async (req: Request, res: Response) => {
         const token = await tokenRepository.findById(req.body.refreshToken)
 
         if (!token || !user) {
-            return res.status(400).end("invalid token")
+            throw new AuthenticationError("invalid token")
         }
 
         const accessToken = generateAccessToken(user)
@@ -25,28 +26,28 @@ router.post("/refresh", async (req: Request, res: Response) => {
 
         return res.json({ user, accessToken, refreshToken })
     } catch (err) {
-        return res.sendStatus(403)
+        next(err)
     }
 })
 
-router.post("/login", async (req: Request, res: Response) => {
-    const user = await userRepository.findOneBy({ email: req.body.email })
+router.post("/login", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await userRepository.findOneBy({ email: req.body.email })
 
-    if (!user || !await bcrypt.compare(req.body.password, user.password)) {
-        return res.status(403).end("email or password invalid")
+        if (!user || !await bcrypt.compare(req.body.password, user.password)) {
+            throw new AuthenticationError("invalid email or password")
+        }
+
+        const accessToken = generateAccessToken(user)
+        const refreshToken = generateRefreshToken(user)
+
+        await tokenRepository.destroy({ user_id: user.id })
+        await tokenRepository.create({ token: refreshToken, user_id: user.id })
+
+        return res.json({ user, accessToken, refreshToken })
+    } catch (err) {
+        next(err)
     }
-
-    const accessToken = generateAccessToken(user)
-    const refreshToken = generateRefreshToken(user)
-
-    if (!accessToken || !refreshToken) {
-        return res.status(400).end("could not generate token")
-    }
-
-    await tokenRepository.destroy({ user_id: user.id })
-    await tokenRepository.create({ token: refreshToken, user_id: user.id })
-
-    return res.json({ user, accessToken, refreshToken })
 })
 
 export default router

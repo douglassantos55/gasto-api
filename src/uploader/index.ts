@@ -1,5 +1,6 @@
 import fs from "fs"
 import path from "path"
+import { UploadError } from "../errors"
 import { Options, UploadedFile, UploadedFiles } from "./types"
 
 export default class {
@@ -27,9 +28,9 @@ export default class {
 
                 if (config) {
                     if (file.size > config.size) {
-                        return reject("image size is too large")
+                        throw new UploadError("image size is too large", key)
                     } else if (!config.mimeType.includes(file.mimeType)) {
-                        return reject("invalid image type")
+                        throw new UploadError("invalid image type", key)
                     }
                 }
 
@@ -37,7 +38,6 @@ export default class {
 
                 fs.copyFile(file.path, uploadPath, () => {
                     this.uploaded[key] = config.uploadDir + file.name
-                    console.log(`File uploaded to ${uploadPath}`)
 
                     if (Object.keys(this.uploaded).length === Object.keys(files).length) {
                         resolve(this.uploaded)

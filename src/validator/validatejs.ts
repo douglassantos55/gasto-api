@@ -1,5 +1,11 @@
 import validate from "validate.js"
-import { Validator, Rule, Rules, Errors } from "./types"
+import { ValidationError } from "../errors";
+import { Repository } from "../repositories/types";
+import { Validator, Rule, Rules } from "./types"
+
+import "./exists"
+import "./unique"
+import "./requiredIfPresent"
 
 type Constraints = {
     [key: string]: any
@@ -21,25 +27,23 @@ validate.extend(validate.validators.datetime, {
     }
 });
 
-validate.validators.requiredIfPresent = function(
-    value: string,
-    options: { field: string },
-    key: string,
-    data: object
-) {
-    if (options.field != undefined) {
-        key = options.field
-    }
-
-    if (data[key] !== undefined) {
-        return validate.single(value, { presence: { allowEmpty: false } })
-    }
-
-    return undefined
-}
-
 class ValidateJsRule implements Rule {
     public constraints: Constraints = {}
+
+    unique<T>(repository: Repository<T>): Rule {
+        this.constraints.unique = {
+            repository
+        }
+
+        return this
+    }
+
+    exists<T>(repository: Repository<T>): Rule {
+        this.constraints.exists = {
+            repository
+        }
+        return this
+    }
 
     numeric(): Rule {
         this.constraints.numericality = { strict: true }
@@ -53,6 +57,14 @@ class ValidateJsRule implements Rule {
 
     in<T>(options: T[]): Rule {
         this.constraints.inclusion = options
+        return this
+    }
+
+    notIn<T>(options: T[], message?: string): Rule {
+        this.constraints.exclusion = {
+            within: options,
+            message
+        }
         return this
     }
 
@@ -94,13 +106,17 @@ export default class implements Validator {
         return new ValidateJsRule()
     }
 
-    validate<T>(data: T, rules: Rules<T>): Errors<T> | undefined {
-        const constraints = {}
+    async validate<T>(data: T, rules: Rules<T>): Promise<void> {
+        try {
+            const constraints = {}
 
-        Object.keys(rules).forEach((field: string) => {
-            constraints[field] = rules[field].constraints
-        })
+            Object.keys(rules).forEach((field: string) => {
+                constraints[field] = rules[field].constraints
+            })
 
-        return validate.validate(data, constraints)
+            await validate.async(data, constraints)
+        } catch (validationErrors) {
+            throw new ValidationError<T>(validationErrors)
+        }
     }
 }
