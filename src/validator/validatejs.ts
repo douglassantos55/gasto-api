@@ -30,71 +30,89 @@ validate.extend(validate.validators.datetime, {
 class ValidateJsRule implements Rule {
     public constraints: Constraints = {}
 
-    unique<T>(repository: Repository<T>): Rule {
+    unique<T>(repository: Repository<T>, message?: string): Rule {
         this.constraints.unique = {
-            repository
+            repository,
+            message,
         }
 
         return this
     }
 
-    exists<T>(repository: Repository<T>): Rule {
+    exists<T>(repository: Repository<T>, message?: string): Rule {
         this.constraints.exists = {
-            repository
+            repository,
+            message,
         }
         return this
     }
 
-    numeric(): Rule {
-        this.constraints.numericality = { strict: true }
+    numeric(message?: string): Rule {
+        this.constraints.numericality = {
+            strict: true,
+            message,
+        }
         return this
     }
 
-    date(): Rule {
-        this.constraints.date = true
+    date(message?: string): Rule {
+        this.constraints.date = {
+            message,
+        }
         return this
     }
 
-    in<T>(options: T[]): Rule {
-        this.constraints.inclusion = options
+    in<T>(options: T[], message?: string): Rule {
+        this.constraints.inclusion = {
+            within: options,
+            message,
+        }
         return this
     }
 
     notIn<T>(options: T[], message?: string): Rule {
         this.constraints.exclusion = {
             within: options,
-            message
+            message,
         }
         return this
     }
 
-    requiredIfPresent(field?: string): Rule {
+    requiredIfPresent(field?: string, message?: string): Rule {
         this.constraints.requiredIfPresent = {
-            field
+            field,
+            message,
         }
         return this
     }
 
-    email(): Rule {
-        this.constraints.email = true
+    email(message?: string): Rule {
+        this.constraints.email = {
+            message,
+        }
         return this
     }
 
-    min(size: number): Rule {
+    min(size: number, message?: string): Rule {
         this.constraints.length = {
-            minimum: size
+            minimum: size,
+            message,
         }
         return this
     }
 
-    matches(field: string): Rule {
-        this.constraints.equality = field
+    matches(field: string, message?: string): Rule {
+        this.constraints.equality = {
+            attribute: field,
+            message,
+        }
         return this
     }
 
-    required(): Rule {
+    required(message?: string): Rule {
         this.constraints.presence = {
             allowEmpty: false,
+            message,
         }
 
         return this

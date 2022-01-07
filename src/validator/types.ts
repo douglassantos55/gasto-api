@@ -10,15 +10,15 @@ export interface Validator {
 }
 
 export interface Rule {
-    date(): Rule
-    email(): Rule
-    numeric(): Rule
-    required(): Rule
-    min(size: number): Rule
-    in<T>(options: T[]): Rule
-    matches(field: string): Rule
-    requiredIfPresent(field?: string): Rule
-    unique<T>(repository: Repository<T>): Rule
-    exists<T>(repository: Repository<T>): Rule
+    date(message?: string): Rule
+    email(message?: string): Rule
+    numeric(message?: string): Rule
+    required(message?: string): Rule
+    min(size: number, message?: string ): Rule
+    in<T>(options: T[], message?: string): Rule
+    matches(field: string, message?: string): Rule
+    requiredIfPresent(field?: string, message?: string): Rule
+    unique<T>(repository: Repository<T>, message?: string): Rule
+    exists<T>(repository: Repository<T>, message?: string): Rule
     notIn<T>(options: T[], message?: string): Rule
 }

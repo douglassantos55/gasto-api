@@ -2,7 +2,7 @@ import validate from "validate.js"
 
 validate.validators.requiredIfPresent = function(
     value: string,
-    options: { field: string },
+    options: { field: string, message: string },
     key: string,
     data: object
 ) {
@@ -11,7 +11,12 @@ validate.validators.requiredIfPresent = function(
     }
 
     if (data[key] !== undefined) {
-        return validate.single(value, { presence: { allowEmpty: false } })
+        return validate.single(value, {
+            presence: {
+                message: options.message,
+                allowEmpty: false,
+            }
+        })
     }
 
     return undefined
