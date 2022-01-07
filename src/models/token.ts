@@ -12,6 +12,7 @@ Token.init({
     token: {
         primaryKey: true,
         type: DataTypes.STRING,
+        allowNull: false,
     }
 }, {
     sequelize: connection,

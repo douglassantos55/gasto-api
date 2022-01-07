@@ -11,12 +11,14 @@ class Expense extends Model implements ExpenseInterface {
     declare type: ExpenseType
     declare friend?: User
     declare payment?: ExpenseInterface
+    declare user_id: string
 }
 
 Expense.init({
     id: {
         type: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
     },
     date: DataTypes.DATEONLY,
     description: DataTypes.STRING,

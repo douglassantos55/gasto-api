@@ -29,4 +29,5 @@ export interface Expense {
     type: ExpenseType
     friend?: User
     payment?: Expense
+    user_id: string
 }

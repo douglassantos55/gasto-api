@@ -25,6 +25,7 @@ User.init({
     id: {
         type: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
     },
     name: DataTypes.STRING,
     email: {
