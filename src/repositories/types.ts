@@ -1,5 +1,14 @@
+export interface Filter {
+    filter(): unknown
+}
+
 export type Condition<T> = {
-    [key in keyof T]?: string
+    [key in keyof T]?: string | Filter
+}
+
+export interface Filters {
+    like(value: string): Filter
+    date(value: string, type: string): Filter
 }
 
 export interface Repository<T> {
@@ -9,5 +18,6 @@ export interface Repository<T> {
     findOneBy(condition: Condition<T>): Promise<T>
     destroy(condition: Condition<T>): Promise<boolean>
     update(data: any, condition: Condition<T>): Promise<T>
+    filters(): Filters
 }
 

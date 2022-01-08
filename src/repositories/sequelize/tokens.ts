@@ -1,8 +1,13 @@
 import { Token } from "../../types"
 import TokenModel from "../../models/token"
-import { Condition, Repository } from "../types"
+import { parseFilters, SequelizeFilters } from "./filters"
+import { Filters, Condition, Repository } from "../types"
 
 class TokenRepository implements Repository<Token> {
+    filters(): Filters {
+        return new SequelizeFilters()
+    }
+
     async all(): Promise<Token[]> {
         const tokens = await TokenModel.findAll()
         return tokens.map((token: TokenModel) => token.toJSON())
@@ -14,12 +19,12 @@ class TokenRepository implements Repository<Token> {
     }
 
     async findOneBy(condition: Condition<Token>): Promise<Token> {
-        const item = await TokenModel.findOne({ where: condition })
+        const item = await TokenModel.findOne({ where: parseFilters(condition) })
         return item.toJSON();
     }
 
     async update(data: Token, condition: Condition<Token>) {
-        await TokenModel.update(data, { where: condition })
+        await TokenModel.update(data, { where: parseFilters(condition) })
         return this.findOneBy(condition)
     }
 
@@ -29,7 +34,7 @@ class TokenRepository implements Repository<Token> {
     }
 
     async destroy(condition: Condition<Token>): Promise<boolean> {
-        const count = await TokenModel.destroy({ where: condition })
+        const count = await TokenModel.destroy({ where: parseFilters(condition) })
         return !!count
     }
 }

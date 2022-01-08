@@ -5,7 +5,7 @@ import repository from "../repositories/limits"
 
 const router = Router()
 
-router.get("/limits", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
     try {
         return res.json(await repository.all({ user_id: req.user.id }))
     } catch (err) {

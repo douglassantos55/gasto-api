@@ -10,6 +10,9 @@ router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFu
     try {
         return res.json(await repository.all({
             ...req.query,
+            description: repository.filters().like(req.query.description as string),
+            month: repository.filters().date(req.query.month as string, "%m"),
+            year: repository.filters().date(req.query.year as string, "%Y"),
             user_id: req.user.id
         }))
     } catch (err) {

@@ -1,10 +1,15 @@
 import bcrypt from "bcrypt"
 import { randomUUID } from "crypto"
 import UserModel from "../../models/user"
-import { Repository, Condition } from "../types"
+import { Filters, Repository, Condition } from "../types"
 import { Limit, User, UserCreationData } from "../../types"
+import { parseFilters, SequelizeFilters } from "./filters"
 
 class UserRepository implements Repository<User> {
+    filters(): Filters {
+        return new SequelizeFilters()
+    }
+
     async all(): Promise<User[]> {
         const users = await UserModel.findAll()
         return users.map((user: UserModel) => user.toJSON())
@@ -16,7 +21,7 @@ class UserRepository implements Repository<User> {
     }
 
     async findOneBy(condition: Condition<User>): Promise<User> {
-        const item = await UserModel.findOne({ where: condition, include: "friends" })
+        const item = await UserModel.findOne({ where: parseFilters(condition), include: "friends" })
         return item && item.toJSON();
     }
 
@@ -25,7 +30,7 @@ class UserRepository implements Repository<User> {
             data.password = await bcrypt.hash(data.password, 10)
         }
 
-        await UserModel.update(data, { where: condition })
+        await UserModel.update(data, { where: parseFilters(condition) })
         return this.findOneBy(condition)
     }
 
@@ -40,7 +45,7 @@ class UserRepository implements Repository<User> {
     }
 
     async destroy(condition: Condition<User>): Promise<boolean> {
-        const count = await UserModel.destroy({ where: condition })
+        const count = await UserModel.destroy({ where: parseFilters(condition) })
         return !!count
     }
 
@@ -70,7 +75,7 @@ class UserRepository implements Repository<User> {
 
     async getLimits(userId: string, condition: Condition<Limit>): Promise<Limit[]> {
         const userModel = await UserModel.findByPk(userId)
-        return userModel.getLimits({ where: condition })
+        return userModel.getLimits({ where: parseFilters(condition) })
     }
 }
 
