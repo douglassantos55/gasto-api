@@ -6,8 +6,15 @@ import authMiddleware from "../auth/middleware"
 
 const router = Router()
 
-router.get("/", async (_req: Request, res: Response) => {
-    res.json(await repository.all())
+router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json(await repository.all({
+            ...req.query,
+            user_id: req.user.id
+        }))
+    } catch (err) {
+        next(err)
+    }
 })
 
 router.post("/", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {

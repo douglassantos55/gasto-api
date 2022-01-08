@@ -68,9 +68,9 @@ class UserRepository implements Repository<User> {
         return userModel.removeFriend(friendId)
     }
 
-    async getLimits(userId: string): Promise<Limit[]> {
+    async getLimits(userId: string, condition: Condition<Limit>): Promise<Limit[]> {
         const userModel = await UserModel.findByPk(userId)
-        return userModel.getLimits()
+        return userModel.getLimits({ where: condition })
     }
 }
 

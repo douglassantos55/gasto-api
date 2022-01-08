@@ -3,7 +3,7 @@ export type Condition<T> = {
 }
 
 export interface Repository<T> {
-    all(): Promise<T[]>
+    all(condition?: Condition<T>): Promise<T[]>
     create(data: any): Promise<T>
     findById(id: string): Promise<T>
     findOneBy(condition: Condition<T>): Promise<T>

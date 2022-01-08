@@ -1,14 +1,11 @@
 import bcrypt from "bcrypt"
 import { NextFunction, Request, Response, Router } from "express"
-import { AuthenticationError } from "../../errors"
-import userRepository from "../../repositories/users"
-import tokenRepository from "../../repositories/tokens"
-import { decodeRefreshToken, generateAccessToken, generateRefreshToken } from "../../auth/token"
-import user from "./user"
+import { AuthenticationError } from "../errors"
+import userRepository from "../repositories/users"
+import tokenRepository from "../repositories/tokens"
+import { decodeRefreshToken, generateAccessToken, generateRefreshToken } from "../auth/token"
 
 const router = Router()
-
-router.use("/user", user)
 
 router.post("/refresh", async (req: Request, res: Response, next: NextFunction) => {
     try {

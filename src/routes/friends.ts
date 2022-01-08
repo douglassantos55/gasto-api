@@ -6,6 +6,14 @@ import { ValidationError } from "../errors"
 
 const router = Router()
 
+router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json(await repository.getFriends(req.user.id))
+    } catch (err) {
+        next(err)
+    }
+})
+
 router.delete("/:id", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
     try {
         await validator.validate(req.params, {

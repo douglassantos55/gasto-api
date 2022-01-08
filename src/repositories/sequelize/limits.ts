@@ -3,8 +3,8 @@ import LimitModel from "../../models/limit"
 import { Condition, Repository } from "../types"
 
 class LimitRepository implements Repository<Limit> {
-    async all(): Promise<Limit[]> {
-        const tokens = await LimitModel.findAll()
+    async all(condition: Condition<Limit>): Promise<Limit[]> {
+        const tokens = await LimitModel.findAll({ where: condition })
         return tokens.map((token: LimitModel) => token.toJSON())
     }
 

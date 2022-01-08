@@ -4,8 +4,8 @@ import { Expense } from "../../types"
 import { Repository, Condition } from "../types"
 
 class ExpenseRepository implements Repository<Expense> {
-    async all(): Promise<Expense[]> {
-        const users = await ExpenseModel.findAll({ include: ["friend", "payment"] })
+    async all(condition: Condition<Expense>): Promise<Expense[]> {
+        const users = await ExpenseModel.findAll({ where: condition, include: ["friend", "payment"] })
         return users.map((user: ExpenseModel) => user.toJSON())
     }
 
