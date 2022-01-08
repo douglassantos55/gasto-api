@@ -1,7 +1,9 @@
 import {
     DataTypes,
     HasManyAddAssociationMixin,
+    HasManyGetAssociationsMixin,
     HasManyHasAssociationMixin,
+    HasManyRemoveAssociationMixin,
     Model
 } from "sequelize"
 
@@ -16,9 +18,10 @@ class User extends Model implements UserInterface {
     declare picture: string
     declare friends?: User[]
 
-    declare addFriend: HasManyAddAssociationMixin<User, number>;
-    declare hasFriend: HasManyHasAssociationMixin<User, number>;
-
+    declare getFriends: HasManyGetAssociationsMixin<User>;
+    declare addFriend: HasManyAddAssociationMixin<User, string>;
+    declare hasFriend: HasManyHasAssociationMixin<User, string>;
+    declare removeFriend: HasManyRemoveAssociationMixin<User, string>;
 }
 
 User.init({

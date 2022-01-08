@@ -45,17 +45,27 @@ class UserRepository implements Repository<User> {
     }
 
     async addFriend(user: User, friend: User): Promise<void> {
-        const userModel= await UserModel.findByPk(user.id)
+        const userModel = await UserModel.findByPk(user.id)
         const friendModel = await UserModel.findByPk(friend.id)
 
         await userModel.addFriend(friendModel)
     }
 
     async hasFriend(user: User, friend: User): Promise<boolean> {
-        const userModel= await UserModel.findByPk(user.id)
+        const userModel = await UserModel.findByPk(user.id)
         const friendModel = await UserModel.findByPk(friend.id)
 
         return userModel.hasFriend(friendModel)
+    }
+
+    async getFriends(userId: string): Promise<User[]> {
+        const userModel = await UserModel.findByPk(userId)
+        return userModel.getFriends()
+    }
+
+    async removeFriend(userId: string, friendId: string) {
+        const userModel = await UserModel.findByPk(userId)
+        return userModel.removeFriend(friendId)
     }
 }
 
