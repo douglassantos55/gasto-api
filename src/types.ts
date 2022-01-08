@@ -31,3 +31,10 @@ export interface Expense {
     payment?: Expense
     user_id: string
 }
+
+export interface Limit {
+    total: number
+    month: number
+    year: number
+    user_id: string
+}
