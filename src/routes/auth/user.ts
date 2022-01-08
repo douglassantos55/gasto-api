@@ -5,11 +5,16 @@ import repository from "../../repositories/users"
 import authMiddleware from "../../auth/middleware"
 import Uploader from "../../uploader"
 import multipartMiddleware from "../../uploader/middleware"
-import friends from "./friends"
 
 const router = Router()
 
-router.use("/friends", friends)
+router.get("/limits", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json(await repository.getLimits(req.user.id))
+    } catch (err) {
+        next(err)
+    }
+})
 
 router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: Response, next: NextFunction) => {
     try {

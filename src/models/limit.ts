@@ -30,6 +30,11 @@ Limit.init({
     timestamps: false,
 })
 
+User.hasMany(Limit, {
+    as: "limits",
+    foreignKey: "user_id",
+})
+
 Limit.belongsTo(User, {
     as: "user",
     foreignKey: "user_id",

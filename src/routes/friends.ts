@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response, Router } from "express"
-import validator from "../../validator"
-import repository from "../../repositories/users"
-import authMiddleware from "../../auth/middleware"
-import { ValidationError } from "../../errors"
+import validator from "../validator"
+import repository from "../repositories/users"
+import authMiddleware from "../auth/middleware"
+import { ValidationError } from "../errors"
 
 const router = Router()
 

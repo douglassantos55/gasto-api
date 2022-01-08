@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt"
 import { randomUUID } from "crypto"
 import UserModel from "../../models/user"
-import { User, UserCreationData } from "../../types"
 import { Repository, Condition } from "../types"
+import { Limit, User, UserCreationData } from "../../types"
 
 class UserRepository implements Repository<User> {
     async all(): Promise<User[]> {
@@ -66,6 +66,11 @@ class UserRepository implements Repository<User> {
     async removeFriend(userId: string, friendId: string) {
         const userModel = await UserModel.findByPk(userId)
         return userModel.removeFriend(friendId)
+    }
+
+    async getLimits(userId: string): Promise<Limit[]> {
+        const userModel = await UserModel.findByPk(userId)
+        return userModel.getLimits()
     }
 }
 

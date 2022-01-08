@@ -8,7 +8,7 @@ import {
 } from "sequelize"
 
 import sequelize from "./connection"
-import { User as UserInterface } from "../types"
+import { Limit, User as UserInterface } from "../types"
 
 class User extends Model implements UserInterface {
     declare id: string
@@ -22,6 +22,8 @@ class User extends Model implements UserInterface {
     declare addFriend: HasManyAddAssociationMixin<User, string>;
     declare hasFriend: HasManyHasAssociationMixin<User, string>;
     declare removeFriend: HasManyRemoveAssociationMixin<User, string>;
+
+    declare getLimits: HasManyGetAssociationsMixin<Limit>;
 }
 
 User.init({
