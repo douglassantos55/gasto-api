@@ -6,7 +6,7 @@ import { Limit, User, UserCreationData } from "../../types"
 
 class UserRepository implements Repository<User> {
     async all(): Promise<User[]> {
-        const users = await UserModel.findAll({ include: "friends" })
+        const users = await UserModel.findAll()
         return users.map((user: UserModel) => user.toJSON())
     }
 
