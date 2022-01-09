@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": ".ts",
     "ignore": [],
-    "exec": "babel src -d lib --extensions .ts && node lib/server.js"
+    "exec": "babel src -d lib --extensions .ts && node -r dotenv/config lib/server.js"
 }

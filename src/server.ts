@@ -1,14 +1,11 @@
-import dotenv from "dotenv"
-import express from "express"
 import cors from "cors"
+import express from "express"
 import users from "./routes/users"
 import auth from "./routes/auth"
 import expenses from "./routes/expenses"
 import limits from "./routes/limits"
 import friends from "./routes/friends"
 import errorHandler from "./errors/handler"
-
-dotenv.config()
 
 const port = process.env.PORT
 const app = express()

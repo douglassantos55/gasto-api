@@ -2,7 +2,7 @@
   "name": "gasto-api",
   "version": "1.0.0",
   "description": "",
-  "main": "build/server.js",
+  "main": "lib/server.js",
   "scripts": {
     "serve": "nodemon",
     "build": "babel src --out-dir lib --extensions .ts"

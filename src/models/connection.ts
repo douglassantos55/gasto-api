@@ -1,10 +1,16 @@
-import { Sequelize } from "sequelize"
+import { Dialect, Sequelize } from "sequelize"
 
-const conn = new Sequelize({
-    dialect: "sqlite",
-    storage: "database.sqlite",
-    logging: false,
-})
+const conn = new Sequelize(
+    process.env.DATABASE_NAME,
+    process.env.DATABASE_USERNAME,
+    process.env.DATABASE_PASSWORD,
+    {
+        dialect: process.env.DATABASE_DIALECT as Dialect,
+        host: process.env.DATABASE_HOST,
+        storage: process.env.DATABASE_STORAGE,
+        port: process.env.DATABASE_PORT as unknown as number,
+    }
+)
 
 conn.sync()
 
