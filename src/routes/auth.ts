@@ -4,6 +4,7 @@ import { AuthenticationError } from "../errors"
 import userRepository from "../repositories/users"
 import tokenRepository from "../repositories/tokens"
 import { decodeRefreshToken, generateAccessToken, generateRefreshToken } from "../auth/token"
+import { JsonWebTokenError } from "jsonwebtoken"
 
 const router = Router()
 
@@ -26,7 +27,11 @@ router.post("/refresh", async (req: Request, res: Response, next: NextFunction) 
 
         return res.json({ user, accessToken, refreshToken })
     } catch (err) {
-        next(err)
+        if (err instanceof JsonWebTokenError) {
+            res.sendStatus(401)
+        } else {
+            next(err)
+        }
     }
 })
 
@@ -46,7 +51,11 @@ router.post("/login", async (req: Request, res: Response, next: NextFunction) =>
 
         return res.json({ user, accessToken, refreshToken })
     } catch (err) {
-        next(err)
+        if (err instanceof JsonWebTokenError) {
+            res.sendStatus(401)
+        } else {
+            next(err)
+        }
     }
 })
 

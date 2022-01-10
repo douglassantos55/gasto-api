@@ -7,7 +7,7 @@ const router = Router()
 
 router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        return res.json(await repository.all({
+        return res.json(await repository.findOneBy({
             ...req.query,
             user_id: req.user.id
         }))

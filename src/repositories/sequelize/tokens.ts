@@ -2,6 +2,7 @@ import { Token } from "../../types"
 import TokenModel from "../../models/token"
 import { parseFilters, SequelizeFilters } from "./filters"
 import { Filters, Condition, Repository } from "../types"
+import { NotFoundError } from "../../errors"
 
 class TokenRepository implements Repository<Token> {
     filters(): Filters {
@@ -15,11 +16,21 @@ class TokenRepository implements Repository<Token> {
 
     async findById(id: string): Promise<Token> {
         const item = await TokenModel.findByPk(id)
+
+        if (!item) {
+            throw new NotFoundError("Token not found")
+        }
+
         return item.toJSON();
     }
 
     async findOneBy(condition: Condition<Token>): Promise<Token> {
         const item = await TokenModel.findOne({ where: parseFilters(condition) })
+
+        if (!item) {
+            throw new NotFoundError("Token not found")
+        }
+
         return item.toJSON();
     }
 

@@ -59,11 +59,6 @@ class DateFilter implements Filter {
     DATE_FORMAT = {
         sqlite: (format: string) => sequelize.fn("strftime", format, sequelize.col("Expense.date")),
         mysql: (format: string) => sequelize.fn("date_format", sequelize.col("Expense.date"), format),
-        oracle: (format: string) => {
-            let newFormat = format.replace("%", "");
-            newFormat = newFormat.padStart((format === "%m" ? 2 : 4), newFormat).toUpperCase()
-            return sequelize.fn("to_char", sequelize.col("Expense.date"), newFormat)
-        },
     }
 
     constructor(value: string, format: string) {
@@ -76,7 +71,5 @@ class DateFilter implements Filter {
             const func = this.DATE_FORMAT[connection.getDialect()]
             return sequelize.where(func(this.format), this.value.padStart(2, "0"))
         }
-
-        return undefined
     }
 }

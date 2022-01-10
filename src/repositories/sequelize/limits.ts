@@ -2,6 +2,7 @@ import { Limit } from "../../types"
 import LimitModel from "../../models/limit"
 import { Filters, Condition, Repository } from "../types"
 import { parseFilters, SequelizeFilters } from "./filters"
+import { NotFoundError } from "../../errors"
 
 class LimitRepository implements Repository<Limit> {
     filters(): Filters {
@@ -15,11 +16,21 @@ class LimitRepository implements Repository<Limit> {
 
     async findById(id: string): Promise<Limit> {
         const item = await LimitModel.findByPk(id)
+
+        if (!item) {
+            throw new NotFoundError("Limit not found")
+        }
+
         return item.toJSON();
     }
 
     async findOneBy(condition: Condition<Limit>): Promise<Limit> {
         const item = await LimitModel.findOne({ where: parseFilters(condition) })
+
+        if (!item) {
+            throw new NotFoundError("Limit not found")
+        }
+
         return item.toJSON();
     }
 

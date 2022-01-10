@@ -3,6 +3,7 @@ import { parseFilters, SequelizeFilters } from "./filters"
 import ExpenseModel from "../../models/expense"
 import { Expense } from "../../types"
 import { Repository, Condition, Filters } from "../types"
+import { NotFoundError } from "../../errors"
 
 class ExpenseRepository implements Repository<Expense> {
     filters(): Filters {
@@ -20,12 +21,22 @@ class ExpenseRepository implements Repository<Expense> {
 
     async findById(id: string): Promise<Expense> {
         const item = await ExpenseModel.findByPk(id, { include: ["friend", "payment"] })
-        return item && item.toJSON();
+
+        if (!item) {
+            throw new NotFoundError("Expense not found")
+        }
+
+        return item.toJSON();
     }
 
     async findOneBy(condition: Condition<Expense>): Promise<Expense> {
         const item = await ExpenseModel.findOne({ where: parseFilters(condition), include: ["friend", "payment"] })
-        return item && item.toJSON();
+
+        if (!item) {
+            throw new NotFoundError("Expense not found")
+        }
+
+        return item.toJSON();
     }
 
     async update(data: Expense, condition: Condition<Expense>) {

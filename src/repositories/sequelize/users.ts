@@ -4,6 +4,7 @@ import UserModel from "../../models/user"
 import { Filters, Repository, Condition } from "../types"
 import { Limit, User, UserCreationData } from "../../types"
 import { parseFilters, SequelizeFilters } from "./filters"
+import { NotFoundError } from "../../errors"
 
 class UserRepository implements Repository<User> {
     filters(): Filters {
@@ -17,12 +18,22 @@ class UserRepository implements Repository<User> {
 
     async findById(id: string): Promise<User> {
         const item = await UserModel.findByPk(id, { include: "friends" })
-        return item && item.toJSON();
+
+        if (!item) {
+            throw new NotFoundError("User not found")
+        }
+
+        return item.toJSON();
     }
 
     async findOneBy(condition: Condition<User>): Promise<User> {
         const item = await UserModel.findOne({ where: parseFilters(condition), include: "friends" })
-        return item && item.toJSON();
+
+        if (!item) {
+            throw new NotFoundError("User not found")
+        }
+
+        return item.toJSON();
     }
 
     async update(data: User, condition: Condition<User>) {
