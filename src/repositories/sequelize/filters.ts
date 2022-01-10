@@ -13,14 +13,14 @@ export function parseFilters(condition: Condition<any>): WhereOptions {
     Object.keys(condition).forEach((key: string) => {
         const value = condition[key]
 
-        if (typeof value !== "string") {
-            const filter = (condition[key] as Filter).filter()
+        if (!["string", "number"].includes(typeof value)) {
+            const filter = (value as Filter).filter()
 
             if (filter) {
                 where[key] = filter
             }
         } else {
-            where[key] = condition[key] as string
+            where[key] = value as string
         }
     })
 
