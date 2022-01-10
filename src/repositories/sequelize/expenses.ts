@@ -13,7 +13,8 @@ class ExpenseRepository implements Repository<Expense> {
     async all(condition: Condition<any>): Promise<Expense[]> {
         const users = await ExpenseModel.findAll({
             where: parseFilters(condition),
-            include: ["friend", "payment"]
+            include: ["friend", "payment"],
+            order: [["createdAt", "DESC"]],
         })
 
         return users.map((user: ExpenseModel) => user.toJSON())
