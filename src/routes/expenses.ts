@@ -67,4 +67,21 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response, next: Nex
     }
 })
 
+router.delete("/:id", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await validator.validate(req.params, {
+            id: validator.rules().required().exists(repository),
+        })
+
+        await repository.destroy({
+            id: req.params.id,
+            user_id: req.user.id
+        })
+
+        return res.sendStatus(204)
+    } catch (err) {
+        next(err)
+    }
+})
+
 export default router
