@@ -6,6 +6,21 @@ import authMiddleware from "../auth/middleware"
 
 const router = Router()
 
+router.get("/debts", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json(await repository.all({
+            ...req.query,
+            type: ExpenseType.LOAN,
+            description: repository.filters().like(req.query.description as string),
+            month: repository.filters().date(req.query.month as string, "%m"),
+            year: repository.filters().date(req.query.year as string, "%Y"),
+            friend_id: req.user.id,
+        }))
+    } catch (err) {
+        next(err)
+    }
+})
+
 router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
     try {
         return res.json(await repository.all({
@@ -14,6 +29,17 @@ router.get("/", authMiddleware, async (req: Request, res: Response, next: NextFu
             month: repository.filters().date(req.query.month as string, "%m"),
             year: repository.filters().date(req.query.year as string, "%Y"),
             user_id: req.user.id
+        }))
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.get("/:id", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json(await repository.findOneBy({
+            user_id: req.user.id,
+            id: req.params.id,
         }))
     } catch (err) {
         next(err)
