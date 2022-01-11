@@ -11,7 +11,7 @@ export default function(err: Error, _req: Request, res: Response, next: NextFunc
     } else if (err instanceof UploadError) {
         return res.status(400).json({ [err.file]: err.message })
     } else if (err instanceof AuthenticationError) {
-        return res.status(403).end(err.message)
+        return res.status(401).end(err.message)
     } else if (err instanceof NotFoundError) {
         return res.status(404).end(err.message)
     } else {

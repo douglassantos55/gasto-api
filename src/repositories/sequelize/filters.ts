@@ -5,7 +5,7 @@ import { Filter, Filters, Condition } from "../types"
 export function parseFilters(condition: Condition<any>): WhereOptions {
     // Remove empty values
     Object.keys(condition).forEach((k: string) =>
-        (condition[k] == "" || condition[k] == null) && delete condition[k]
+        condition[k] == "" && delete condition[k]
     );
 
     const where: WhereOptions = {}
@@ -13,7 +13,7 @@ export function parseFilters(condition: Condition<any>): WhereOptions {
     Object.keys(condition).forEach((key: string) => {
         const value = condition[key]
 
-        if (!["string", "number"].includes(typeof value)) {
+        if (value && !["string", "number"].includes(typeof value)) {
             const filter = (value as Filter).filter()
 
             if (filter) {

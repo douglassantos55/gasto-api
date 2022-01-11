@@ -15,6 +15,7 @@ router.get("/debts", authMiddleware, async (req: Request, res: Response, next: N
             month: repository.filters().date(req.query.month as string, "%m"),
             year: repository.filters().date(req.query.year as string, "%Y"),
             friend_id: req.user.id,
+            payment_id: null,
         }))
     } catch (err) {
         next(err)
@@ -67,6 +68,30 @@ router.post("/", authMiddleware, async (req: Request, res: Response, next: NextF
         return res.json(expense)
     } catch (error) {
         next(error)
+    }
+})
+
+router.post("/:id/payment", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await validator.validate(req.params, {
+            id: validator.rules().required().exists(repository),
+        })
+
+        const loan = await repository.findById(req.params.id)
+
+        const payment = await repository.create({
+            ...loan,
+            date: new Date(),
+            type: ExpenseType.PAYMENT,
+            user_id: req.user.id,
+            friend_id: loan.user_id,
+        })
+
+        await repository.update({ ...loan, payment_id: payment.id }, { id: loan.id })
+
+        return res.json(payment)
+    } catch (err) {
+        next(err)
     }
 })
 

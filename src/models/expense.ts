@@ -12,6 +12,8 @@ class Expense extends Model implements ExpenseInterface {
     declare friend?: User
     declare payment?: ExpenseInterface
     declare user_id: string
+    declare friend_id?: string
+    declare payment_id?: string
 }
 
 Expense.init({

@@ -30,6 +30,8 @@ export interface Expense {
     friend?: User
     payment?: Expense
     user_id: string
+    friend_id?: string
+    payment_id?: string
 }
 
 export interface Limit {
