@@ -5,8 +5,17 @@ import userRepository from "../repositories/users"
 import tokenRepository from "../repositories/tokens"
 import { decodeRefreshToken, generateAccessToken, generateRefreshToken } from "../auth/token"
 import { JsonWebTokenError } from "jsonwebtoken"
+import authMiddleware from "../auth/middleware"
 
 const router = Router()
+
+router.get("/user", authMiddleware, (req: Request, res: Response, next: NextFunction) => {
+    try {
+        return res.json(req.user)
+    } catch (err) {
+        next(err)
+    }
+})
 
 router.post("/refresh", async (req: Request, res: Response, next: NextFunction) => {
     try {
