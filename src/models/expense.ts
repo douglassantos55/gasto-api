@@ -46,6 +46,11 @@ Expense.belongsTo(UserModel, {
     as: "friend",
 })
 
+Expense.hasOne(Expense, {
+    foreignKey: "payment_id",
+    as: "source",
+})
+
 Expense.belongsTo(Expense, {
     as: "payment",
     foreignKey: "payment_id",
