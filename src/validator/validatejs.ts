@@ -6,6 +6,7 @@ import { Validator, Rule, Rules } from "./types"
 import "./exists"
 import "./unique"
 import "./requiredIfPresent"
+import "./bcryptCompare"
 
 type Constraints = {
     [key: string]: any
@@ -116,6 +117,15 @@ class ValidateJsRule implements Rule {
         }
 
         return this
+    }
+
+    matchesHash(hash: string, message?: string): Rule {
+        this.constraints.bcryptCompare = {
+            hash,
+            message,
+        }
+
+        return this;
     }
 }
 
