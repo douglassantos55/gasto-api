@@ -5,23 +5,23 @@ import { Options, UploadedFile, UploadedFiles } from "./types"
 
 export default class {
     private uploaded: { [key: string]: string } = {}
+    private uploadDir = path.join(__dirname, process.env.UPLOAD_DIR)
 
     unlink(filename: string): Promise<boolean> {
         return new Promise(resolve => {
-            fs.exists(path.join(__dirname, filename), (exists: boolean) => {
+            fs.exists(path.join(this.uploadDir, filename), (exists: boolean) => {
                 if (exists) {
-                    fs.unlink(path.join(__dirname, filename), () => {
+                    fs.unlink(path.join(this.uploadDir, filename), () => {
                         resolve(true)
                     })
                 }
-
                 resolve(false)
             })
         })
     }
 
     upload(files: UploadedFiles, options: Options): Promise<{ [key: string]: string }> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             Object.keys(files).forEach((key: string) => {
                 const file: UploadedFile = files[key]
                 const config = options[key]
@@ -34,10 +34,10 @@ export default class {
                     }
                 }
 
-                const uploadPath = path.join(__dirname, config.uploadDir + file.name)
+                const uploadPath = path.join(this.uploadDir, config.uploadDir, file.name)
 
                 fs.copyFile(file.path, uploadPath, () => {
-                    this.uploaded[key] = config.uploadDir + file.name
+                    this.uploaded[key] = path.relative(this.uploadDir, uploadPath)
 
                     if (Object.keys(this.uploaded).length === Object.keys(files).length) {
                         resolve(this.uploaded)

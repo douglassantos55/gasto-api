@@ -8,6 +8,8 @@ import multipartMiddleware from "../uploader/middleware"
 
 const router = Router()
 
+// TODO: REMOVE PASSWORD FROM RESPONSES
+
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body as UserCreationData
@@ -48,7 +50,7 @@ router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: R
             const filesUploaded = await uploader.upload(req.files, {
                 picture: {
                     size: (1024 * 1024), // 1MB,
-                    uploadDir: process.env.UPLOAD_DIR + 'pictures/',
+                    uploadDir: 'pictures/',
                     mimeType: ["image/jpeg", "image/png"],
                 }
             })

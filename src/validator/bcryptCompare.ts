@@ -5,7 +5,7 @@ validate.validators.bcryptCompare = async function(
     value: string,
     options: { hash: string, message: string },
 ) {
-    if (!await bcrypt.compare(value, options.hash)) {
+    if (value && !await bcrypt.compare(value, options.hash)) {
         return options.message || "is incorrect"
     }
 }
