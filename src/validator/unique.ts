@@ -1,4 +1,5 @@
 import validate from "validate.js"
+import { NotFoundError } from "../errors";
 import { Repository } from "../repositories/types";
 
 validate.validators.unique = async function(
@@ -6,8 +7,16 @@ validate.validators.unique = async function(
     options: { message: string, repository: Repository<any> },
     key: string,
 ) {
-    if (await options.repository.findOneBy({ [key]: value })) {
-        return options.message || "is already being used"
+    try {
+        if (await options.repository.findOneBy({ [key]: value })) {
+            return options.message || "is already being used"
+        }
+        return undefined
+    } catch (err) {
+        if (err instanceof NotFoundError) {
+            return undefined
+        } else {
+            throw err
+        }
     }
-    return undefined
 }
