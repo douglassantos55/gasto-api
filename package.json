@@ -5,6 +5,7 @@
   "main": "lib/server.js",
   "scripts": {
     "serve": "nodemon",
+    "start": "node lib/server.js",
     "build": "babel src --out-dir lib --extensions .ts"
   },
   "keywords": [],
