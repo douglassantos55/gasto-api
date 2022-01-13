@@ -5,7 +5,7 @@ import { Options, UploadedFile, UploadedFiles } from "./types"
 
 export default class {
     private uploaded: { [key: string]: string } = {}
-    private uploadDir = path.join(__dirname, process.env.UPLOAD_DIR)
+    private uploadDir = path.join(__dirname, '..', process.env.UPLOAD_DIR)
 
     unlink(filename: string): Promise<boolean> {
         return new Promise(resolve => {

@@ -13,7 +13,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
-app.use("/static", express.static(path.join(__dirname, "../upload/")))
+app.use("/static", express.static(path.join(__dirname, process.env.UPLOAD_DIR)))
 
 app.use("/auth", auth)
 app.use("/users", users)
