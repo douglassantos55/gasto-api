@@ -11,7 +11,8 @@ const router = Router()
 
 router.get("/user", authMiddleware, (req: Request, res: Response, next: NextFunction) => {
     try {
-        return res.json(req.user)
+        const { password, ...user } = req.user
+        return res.json(user)
     } catch (err) {
         next(err)
     }
@@ -34,7 +35,8 @@ router.post("/refresh", async (req: Request, res: Response, next: NextFunction) 
         await tokenRepository.destroy({ token: token.token })
         await tokenRepository.create({ token: refreshToken, user_id: decoded.id })
 
-        return res.json({ user, accessToken, refreshToken })
+        const { password, ...data } = user
+        return res.json({ user: data, accessToken, refreshToken })
     } catch (err) {
         if (err instanceof JsonWebTokenError) {
             res.sendStatus(401)
@@ -58,7 +60,8 @@ router.post("/login", async (req: Request, res: Response, next: NextFunction) =>
         await tokenRepository.destroy({ user_id: user.id })
         await tokenRepository.create({ token: refreshToken, user_id: user.id })
 
-        return res.json({ user, accessToken, refreshToken })
+        const { password, ...data } = user
+        return res.json({ user: data, accessToken, refreshToken })
     } catch (err) {
         if (err instanceof JsonWebTokenError) {
             res.sendStatus(401)

@@ -8,8 +8,6 @@ import multipartMiddleware from "../uploader/middleware"
 
 const router = Router()
 
-// TODO: REMOVE PASSWORD FROM RESPONSES
-
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body as UserCreationData
@@ -23,7 +21,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 
         await validator.validate<UserCreationData>(data, rules)
 
-        const user = await repository.create(data)
+        const { password, ...user } = await repository.create(data)
         return res.status(201).json(user)
     } catch (err) {
         next(err)
@@ -62,7 +60,8 @@ router.put("/", authMiddleware, multipartMiddleware, async (req: Request, res: R
             data.picture = filesUploaded.picture
         }
 
-        return res.json(await repository.update(data, { id: req.user.id }))
+        const { password, ...user } = await repository.update(data, { id: req.user.id })
+        return res.json(user)
     } catch (err) {
         next(err)
     }
