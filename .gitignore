@@ -2,5 +2,5 @@
 /lib
 /database.sqlite
 .env
-/upload/*
-!/upload/.gitignore
+/upload/pictures/*
+!/upload/pictures/.gitignore
