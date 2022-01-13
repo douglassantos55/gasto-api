@@ -15,6 +15,7 @@ Token.init({
         allowNull: false,
     }
 }, {
+    tableName: "tokens",
     sequelize: connection,
     timestamps: false,
 })
