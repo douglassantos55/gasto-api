@@ -24,6 +24,6 @@ const conn = new Sequelize(
     options
 )
 
-conn.sync({ alter: true })
+conn.sync({ force: true })
 
 export default conn
