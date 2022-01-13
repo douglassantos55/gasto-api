@@ -6,7 +6,7 @@ module.exports = {
             token: {
                 allowNull: false,
                 primaryKey: true,
-                type: Sequelize.DataTypes.STRING,
+                type: Sequelize.DataTypes.TEXT,
             },
             user_id: {
                 type: Sequelize.DataTypes.STRING,
