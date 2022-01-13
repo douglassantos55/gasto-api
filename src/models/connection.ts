@@ -10,6 +10,7 @@ const conn = new Sequelize(
         host: process.env.DATABASE_HOST,
         storage: process.env.DATABASE_STORAGE,
         port: process.env.DATABASE_PORT as unknown as number,
+        dialectOptions: { ssl: true }
     }
 )
 
