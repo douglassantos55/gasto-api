@@ -59,6 +59,10 @@ class DateFilter implements Filter {
     DATE_FORMAT = {
         sqlite: (format: string) => sequelize.fn("strftime", format, sequelize.col("Expense.date")),
         mysql: (format: string) => sequelize.fn("date_format", sequelize.col("Expense.date"), format),
+        postgres: (format: string) => {
+            const extract = format === "%m" ? "MM" : "YYYY"
+            return sequelize.fn("to_char", sequelize.col("Expense.date"), extract)
+        },
     }
 
     constructor(value: string, format: string) {
