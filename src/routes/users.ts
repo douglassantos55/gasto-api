@@ -4,7 +4,9 @@ import validator from "../validator"
 import repository from "../repositories/users"
 import authMiddleware from "../auth/middleware"
 import Uploader from "../uploader"
+import tokenRepository from "../repositories/tokens"
 import multipartMiddleware from "../uploader/middleware"
+import { generateAccessToken, generateRefreshToken } from "../auth/token"
 
 const router = Router()
 
@@ -21,8 +23,16 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 
         await validator.validate<UserCreationData>(data, rules)
 
-        const { password, ...user } = await repository.create(data)
-        return res.status(201).json(user)
+        const user = await repository.create(data)
+
+        const accessToken = generateAccessToken(user)
+        const refreshToken = generateRefreshToken(user)
+
+        await tokenRepository.destroy({ user_id: user.id })
+        await tokenRepository.create({ token: refreshToken, user_id: user.id })
+
+        const { password, ...userData } = user
+        return res.status(201).json({ user: userData, accessToken, refreshToken })
     } catch (err) {
         next(err)
     }
